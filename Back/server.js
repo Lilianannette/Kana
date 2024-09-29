@@ -1,6 +1,6 @@
 const express = require('express');
 const db = require('./src/Models');
-const seedTypesOfGame = require('./src/seeders/seedTypeOfGame');
+const seedTypesOfGame = require('./src/Seeders/seedTypeOfGame');
 const cors = require('cors')
 
 const app = express();
