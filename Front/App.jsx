@@ -3,9 +3,9 @@
 // import viteLogo from '/vite.svg'
 // import './App.css'
 import { Route, Routes } from 'react-router-dom'
-import {LoginPage} from './pages/LoginPage';
-import {HomePage} from './pages/HomePages';
-import {SignupPage} from './pages/SignupPage';
+import {HomePage} from './src/pages/HomePages';
+import {LoginPage} from './src/pages/LoginPage';
+import {SignupPage} from './src/pages/SignupPage';
 
 function App() {
   return (
