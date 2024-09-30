@@ -13,9 +13,9 @@ export const signup = async (data) => {
 export const login = async (data) => {
     try {
         const response = await axios.post('http://localhost:3000/api/user/login', data);
-        return response.data; 
+        return response.data;
     } catch (error) {
         console.error('Erreur lors de la tentative de connexion:', error);
-        throw error; 
+        throw error;
     }
 };
