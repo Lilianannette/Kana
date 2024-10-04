@@ -19,3 +19,13 @@ export const login = async (data) => {
         throw error;
     }
 };
+
+export const GetProfile = async (token) => {
+  try {
+      const response = await axios.get('http://localhost:3000/api/user/profile', {headers: { Authorization: `Bearer ${token}`}});
+      return response.data;
+  } catch (err) {
+      console.error('Erreur lors de la récupération du profile:', err);
+      throw err;
+  }
+}
