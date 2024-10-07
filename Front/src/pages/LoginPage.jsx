@@ -5,7 +5,7 @@ import { useState } from "react";
 
 export const LoginPage = () => {
     const navigate = useNavigate();
-    const [formData, setFormDate] = useState({
+    const [formData, setFormData] = useState({
         pseudo: '',
         password:'',
     });
@@ -14,7 +14,7 @@ export const LoginPage = () => {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormDate({
+        setFormData({
             ...formData,
             [name]: value,
         });

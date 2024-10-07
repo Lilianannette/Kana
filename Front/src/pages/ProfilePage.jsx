@@ -1,7 +1,9 @@
-import { GetProfile } from "../Services/Apis/auth"
+import { useNavigate } from "react-router-dom"
+import { GetProfile, logout } from "../Services/Apis/auth"
 import { useEffect, useState } from "react"
 
 export const ProfilePage = () => {
+  const navigate = useNavigate();
   const [user, setUser] = useState(null)
   const [error, setError] = useState('')
 
@@ -19,6 +21,20 @@ export const ProfilePage = () => {
     }
   };
 
+  const handleLogout = async () => {
+    const token = localStorage.getItem('token');
+    if(token) {
+      try {
+        await logout(token);
+        localStorage.removeItem('token');
+        navigate('/login');
+      } catch(err) {
+        console.error('Erreur lors de la déconnexion', err)
+        setError('Erreur lors de la déconnexion. Veuillez réessayer.');
+      }
+    }
+  };
+
   useEffect(() => {
     fetchProfile();
   }, []);
@@ -33,11 +49,12 @@ export const ProfilePage = () => {
   return (
     <div>
         <h1>Mon Profil</h1>
+        <p><strong>Genre :</strong> {user.gender}</p>
+        <p><strong>Pseudo :</strong> {user.pseudo}</p>
         <p><strong>Nom :</strong> {user.lastname}</p>
         <p><strong>Prénom :</strong> {user.firstname}</p>
-        <p><strong>Pseudo :</strong> {user.pseudo}</p>
         <p><strong>Email :</strong> {user.email}</p>
-        <p><strong>Genre :</strong> {user.gender}</p>
+        <button onClick={handleLogout}>Déconnexion</button>
     </div>
   );
 }
