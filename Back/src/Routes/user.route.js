@@ -6,9 +6,10 @@ const authenticateJWT = require('../Middlewares/authMiddleware');
 router.post('/api/user', controller.signup);
 router.post('/api/user/login', controller.login);
 router.get('/api/user/profile', authenticateJWT, controller.getProfile);
-router.patch('/api/user/update', authenticateJWT, controller.updateProfile);
+router.patch('/api/user/edit', authenticateJWT, controller.editProfile);
 router.delete('/api/user/delete', authenticateJWT, controller.deleteProfile);
-router.get('/api/user/logout', authenticateJWT, controller.logout);
+router.post('/api/user/logout', authenticateJWT, controller.logout);
+router.put('/api/user/password', authenticateJWT, controller.changePassword);
 
 
 module.exports = router; 

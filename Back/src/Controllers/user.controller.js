@@ -8,10 +8,6 @@ exports.signup = async (req, res) => {
 
     const { gender, pseudo , lastname, firstname, email, password } = req.body;
 
-    // if(!gender || !pseudo || !lastname || !firstname || !email || !password) {
-    //   return res.status(400).json({ message : 'Tous les champs sont obligatoires.'})
-    // }
-
     const existingUserByPseudo = await User.findOne({ where: { pseudo }});
     if(existingUserByPseudo) {
       return res.status(400).json({ message: 'Ce pseudo est déjà pris.'});
@@ -46,8 +42,9 @@ exports.login = async (req, res) => {
     if(!user) {
       return res.status(404).json({ message: 'Utilisateur non trouvé'});
     }
-    console.log(user.pseudo, user.password)
+    console.log('Mot de passe en base:', user.password);
     const isMatch = await bcrypt.compare(password, user.password);
+    console.log('Correspondance du mot de passe lors de la connexion:', isMatch);
     if(!isMatch) {
       return res.status(401).json({ message: 'Mot de passe incorect'});
     }
@@ -74,9 +71,9 @@ exports.getProfile = async (req, res) => {
     res.status(500).json({ message: 'Erreur lors de la récupération du profil utilisateur' });
   }
 };
-// warning to the token for getprofile for the real user
 
-exports.updateProfile = async (req, res) => {
+
+exports.editProfile = async (req, res) => {
   try {
     const { pseudo, lastname, firstname, gender } = req.body;
     const user = await User.findByPk(req.user.id);
@@ -120,6 +117,38 @@ exports.logout = async (req, res) => {
     return res.status(400).json({ message: 'Token non valide' });
   }
 
-  token = null // to verify issu of the token 
+  token = null
   res.status(200).json({ message: 'Déconnexion réussi'})
+};
+
+exports.changePassword = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { oldPassword, newPassword } = req.body;
+
+    console.log('Ancien mot de passe:', oldPassword);
+    console.log('Nouveau mot de passe:', newPassword);
+
+    const user = await User.findByPk(userId);
+    if(!user) {
+      return res.status(404).json({ message: 'Utilisateur non trouvé' });
+    }
+
+    const isMatch = await bcrypt.compare(oldPassword, user.password);
+    if(!isMatch) {
+      return res.status(401).json ({ message: 'Ancien mot de passe Incorrect' });
+    }
+
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(newPassword, salt);
+    console.log('Nouveau mot de passe haché:', hashedPassword);
+
+    user.password = hashedPassword;
+    await user.save();
+    console.log('Mot de passe après la sauvegarde dans l\'instance utilisateur:', user.password);
+
+    res.status(200).json({ message: 'Mot de passe mis à jour avec succès' });
+  } catch (err) {
+    res.status(500).json({ message: 'Erreur lors de la mise a jour du mot de passe', err });
+  }
 };
