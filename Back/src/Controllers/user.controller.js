@@ -126,9 +126,6 @@ exports.changePassword = async (req, res) => {
     const userId = req.user.id;
     const { oldPassword, newPassword } = req.body;
 
-    console.log('Ancien mot de passe:', oldPassword);
-    console.log('Nouveau mot de passe:', newPassword);
-
     const user = await User.findByPk(userId);
     if(!user) {
       return res.status(404).json({ message: 'Utilisateur non trouvé' });
@@ -139,13 +136,17 @@ exports.changePassword = async (req, res) => {
       return res.status(401).json ({ message: 'Ancien mot de passe Incorrect' });
     }
 
+    if(oldPassword === newPassword) {
+      return res.status(400).json({ message: `Le nouveau mot de passe doit être différent de l'ancien`});
+      // function needs to be tested
+    }
+
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(newPassword, salt);
-    console.log('Nouveau mot de passe haché:', hashedPassword);
+
 
     user.password = hashedPassword;
     await user.save();
-    console.log('Mot de passe après la sauvegarde dans l\'instance utilisateur:', user.password);
 
     res.status(200).json({ message: 'Mot de passe mis à jour avec succès' });
   } catch (err) {

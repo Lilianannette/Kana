@@ -8,6 +8,7 @@ import {LoginPage} from './src/pages/LoginPage';
 import {SignupPage} from './src/pages/SignupPage';
 import {ProfilePage} from './src/pages/ProfilePage';
 import {EditProfilePage} from './src/pages/EditProfilePage';
+import { ChangedPasswordPage } from './src/pages/ChangePasswordPage';
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/edit" element={<EditProfilePage />} />
+        <Route path="/password" element={<ChangedPasswordPage />} />
       </Routes>
   )
 }

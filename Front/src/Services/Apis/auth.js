@@ -57,8 +57,16 @@ export const editProfile = async (token, data) => {
     };
 };
 
-// export const changePassword = async (token, data) => {
-//     try {
-//         const response = await axios.put
-//     }
-// }
+export const changePassword = async (token, data) => {
+    try {
+        const response = await axios.put('http://localhost:3000/api/user/password', data, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        return response.data;
+    } catch(err) {
+        console.error('Erreur lors du changemennt de mots de passe :', err)
+        throw err;
+    }
+};
