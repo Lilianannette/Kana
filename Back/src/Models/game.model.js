@@ -8,6 +8,12 @@ module.exports = (sequelize_db, DataTypes) => {
         finishedAt: {
             type: DataTypes.DATE,
             allowNull: true,
+        },
+
+        level: {
+          type: DataTypes.ENUM('1', '2', '3', '4'),
+          allowNull: false,
+          defaultValue: '1',
         }
     });
 

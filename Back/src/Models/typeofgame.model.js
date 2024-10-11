@@ -15,7 +15,7 @@ module.exports = (sequelize_db, DataTypes) => {
 
     TypeOfGame.associate = (models) => {
         TypeOfGame.hasMany(models.Game, {
-            foreignKet: 'id_type_of_game',
+            foreignKey: 'id_type_of_game',
             as: 'games',
             onDelete: 'CASCADE',
         });

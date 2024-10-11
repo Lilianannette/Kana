@@ -1,7 +1,9 @@
+
+
 export const HomePage = () => {
     return (
         <div className='form'>
-            Hello 
+            Hello
         </div>
     )
 };
