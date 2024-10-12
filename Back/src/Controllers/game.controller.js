@@ -1,75 +1,74 @@
 const db = require('../Models');
 const Game = db.game;
 
+
 exports.createGame = async (req, res) => {
-    try {
-        const { id_type_of_game } = req.body;
-        const userId = req.user.id;
+  try {
+    const { level, id_type_of_game } = req.body;
 
-        const game = await Game.create({
-            id_user: userId,
-            id_type_of_game,
-        });
-
-        res.status(201).json({ message: 'Partis créée avec succès', game });
-    }   catch(err) {
-        res.status(500).json({ message: 'Erreur lors de la création de la partie', err });
+    if(!req.user.id) {
+      return res.status(401).json({ message: 'Utilisateur non authentifié '});
     }
+
+    const newGame = await Game.create({
+      id_user: req.user.id,
+      id_type_of_game: id_type_of_game,
+      level,
+      status: 'in_progress',
+      finishedAt: null,
+    });
+
+    res.status(201).json({ message: 'Partie crée avec succès', game: newGame});
+  } catch(err) {
+    console.error('Erreur lors de la création de la partie :', err);
+    res.status(500).json({ message: 'Erreur lors de la création de la partie'});
+  }
 };
 
-exports.getUserGames = async (req, res) => {
-    try {
-        const userId = req.user.id;
-
-        const games = await Game.findAll({
-            where: { id_user: userId },
-            include: {
-                model: db.typeofgame,
-                as: 'typeOfGame',
-                attributes: ['hiragana', 'katakana'],
-            }
-        });
-
-        res.status(200).json(games);
-    }   catch(err) {
-        res.status(500).json({ message: 'Erreur lors de la récuperration des parties', err });
+exports.getGamesByUser = async (req, res) => {
+  try {
+    if(!req.user.id) {
+      return res.status(401).json({ message: 'Utilisateur non authentifié'});
     }
-}
 
-exports.getGameById = async (req, res) => {
-    try {
-        const game = await Game.findByPk(req.params.id, {
-            include: {
-                model: db.typeofgame,
-                as: 'typeOfGame',
-                attributes: ['hiragana', 'katakana'],
-            }
-        });
+    const game = await Game.findAll({
+      where: { id_user: req.user.id },
+      include: [{ model: TypeOfGame, as: 'typeOfGame '}],
+    });
 
-        if(!game) {
-            return res.status(404).json({ message: 'Partie non trouvée' });
-        }
-
-        res.status(200).json(game);
-    }   catch(err) {
-        res.status(500).json({ message: 'Erreur lors de la récupérations de la partie', err })
+    if(game.lenght === 0) {
+      return res.status(404).json({ message: 'Aucune partie trouvée pour cet utilisateur'});
     }
+
+    const inProgressGame = game.filter(game => game.status === 'in_progress');
+    const finishedGame = game.filter(game => game.status === 'finished');
+    const notFinishiedGame = game.filter(game => game.status === 'not_finished');
+
+    res.json({
+      inProgressGame,
+      finishedGame,
+      notFinishiedGame
+    });
+  } catch(err) {
+    console.error('Erreur lors de la récupération des parties :', err);
+    res.status(500).json({ message: 'Erreur lors de la récupération des parties'});
+  }
 };
 
-exports.updateGame = async (req, res) => {
-    try {
-        const { finishedAt } = req.body;
-        const game = await Game.findByPk(req.params.id);
+exports.deleteGame = async (req, res) => {
+  try {
+    const gameId = res.params.id;
 
-        if(!game) {
-            return res.status(404).json({ message: 'Partis non trouvée' });
-        }
-
-        game.finishedAt = finishedAt || new Date();
-
-        await game.save()
-        res.status(200).json({ message: 'Partie mise à jour avec succès', game });
-    }   catch(err) {
-        res.status(500).json({ message: 'Erreur lors de la mise à jour de la partie', err });
+    const game = await Game.findByPk(gameId);
+    if(!game) {
+      return res.status(401).json({ message: 'Partie non trouvé'});
     }
+
+    await game.destroy();
+
+    res.json({ message: 'Partie supprimé avec succès'});
+  } catch (err) {
+    console.error('Erreur lors de la suppression de la partie :', err);
+    res.status(500).json({ message: 'Erreur lors de la suppression de la partie'});
+  }
 };

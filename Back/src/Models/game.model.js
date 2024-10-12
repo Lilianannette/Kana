@@ -14,6 +14,12 @@ module.exports = (sequelize_db, DataTypes) => {
           type: DataTypes.ENUM('1', '2', '3', '4'),
           allowNull: false,
           defaultValue: '1',
+        },
+
+        status: {
+          type: DataTypes.ENUM('in_progress', 'finished', 'not_finished'),
+          allowNull: false,
+          defaultValue: 'in_progress',
         }
     });
 
