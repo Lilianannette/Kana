@@ -1,26 +1,23 @@
 const db = require('../Models');
 const Game = db.game;
 
-
 exports.createGame = async (req, res) => {
   try {
-    const { level, id_type_of_game } = req.body;
+    const { level, kanaList } = req.body;
 
-    if(!req.user.id) {
-      return res.status(401).json({ message: 'Utilisateur non authentifié '});
+    if(!req.user || !req.user.id) {
+      return res.status(401).json({ message: 'Utilisateur non authentifié'});
     }
-
     const newGame = await Game.create({
       id_user: req.user.id,
-      id_type_of_game: id_type_of_game,
       level,
       status: 'in_progress',
       finishedAt: null,
     });
 
-    res.status(201).json({ message: 'Partie crée avec succès', game: newGame});
-  } catch(err) {
-    console.error('Erreur lors de la création de la partie :', err);
+    res.status(201).json({ message: 'Partie créée avec succès', game: newGame});
+  } catch (err) {
+    console.error('Erreur lors de la création de la partie:', err);
     res.status(500).json({ message: 'Erreur lors de la création de la partie'});
   }
 };

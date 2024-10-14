@@ -11,7 +11,7 @@ module.exports = (sequelize_db, DataTypes) => {
         },
 
         level: {
-          type: DataTypes.ENUM('1', '2', '3', '4'),
+          type: DataTypes.INTEGER,
           allowNull: false,
           defaultValue: '1',
         },
@@ -27,12 +27,6 @@ module.exports = (sequelize_db, DataTypes) => {
         game.belongsTo(models.user, {
             foreignKey: 'id_user',
             as: 'user',
-            onDelete: 'CASCADE',
-        });
-
-        game.belongsTo(models.TypeOfGame,  {
-            foreignKey: 'id_type_of_game',
-            as: 'typeOfGame',
             onDelete: 'CASCADE',
         });
     };
