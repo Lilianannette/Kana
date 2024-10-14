@@ -11,9 +11,9 @@ export const Navbar = () => {
         <li>
           <Link to='/profile'>Profil</Link>
         </li>
-        {/* <li>
-          <Link to='/game'>Acceuil</Link>
-        </li> */}
+        <li>
+          <Link to='/game'>Game</Link>
+        </li>
         <li>
           <Link to='/login'>Connexion</Link>
         </li>
