@@ -1,6 +1,5 @@
 const express = require('express');
 const db = require('./src/Models');
-const seedTypesOfGame = require('./src/Seeders/seedTypeOfGame');
 const cors = require('cors')
 
 const app = express();
@@ -24,8 +23,7 @@ app.use(userRoutes);
 app.use(gameRoutes);
 
 
-db.sequelize_db.sync().then(async() => {
-    await seedTypesOfGame();
+db.sequelize_db.sync({alter: true}).then(async() => {
     app.listen(port, () => {
         console.log(`Server is running on port ${port}`);
     });
