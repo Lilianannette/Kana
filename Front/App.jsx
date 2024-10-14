@@ -10,6 +10,7 @@ import {SignupPage} from './src/pages/SignupPage';
 import {ProfilePage} from './src/pages/ProfilePage';
 import {EditProfilePage} from './src/pages/EditProfilePage';
 import { ChangedPasswordPage } from './src/pages/ChangePasswordPage';
+import { GamePage } from './src/pages/GamePage';
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
         <Route path="profile" element={<ProfilePage />} />
         <Route path="edit" element={<EditProfilePage />} />
         <Route path="password" element={<ChangedPasswordPage />} />
+        <Route path="game" element={<GamePage />} />
       </Route>
     </Routes>
   );
